@@ -2,34 +2,26 @@ from pydantic import BaseModel, UUID4
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 
-class FormBase(BaseModel):
+class ModelDefinitionBase(BaseModel):
     name: str
     slug: str
-    title: Optional[str] = None
+    label: Optional[str] = None
     description: Optional[str] = None
     fields: List[Dict[str, Any]] = []
-    validation_rules: Dict[str, Any] = {}
-    submit_action: Dict[str, Any] = {}
-    success_message: Optional[str] = None
-    failure_message: Optional[str] = None
     is_published: bool = False
 
-class FormCreate(FormBase):
+class ModelDefinitionCreate(ModelDefinitionBase):
     pass
 
-class FormUpdate(BaseModel):
+class ModelDefinitionUpdate(BaseModel):
     name: Optional[str] = None
     slug: Optional[str] = None
-    title: Optional[str] = None
+    label: Optional[str] = None
     description: Optional[str] = None
     fields: Optional[List[Dict[str, Any]]] = None
-    validation_rules: Optional[Dict[str, Any]] = None
-    submit_action: Optional[Dict[str, Any]] = None
-    success_message: Optional[str] = None
-    failure_message: Optional[str] = None
     is_published: Optional[bool] = None
 
-class FormResponse(FormBase):
+class ModelDefinitionResponse(ModelDefinitionBase):
     id: UUID4
     version: int
     created_at: datetime
