@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 from app.api import pages, mobile, auth, forms, model_definitions, navigation, app_config
 from app.core.config import settings
 from app.core.database import engine
@@ -27,6 +28,9 @@ async def startup():
     # Create all tables automatically on startup
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        # Auto-migrate any newly added columns
+        await conn.execute(text("ALTER TABLE forms ADD COLUMN IF NOT EXISTS is_published BOOLEAN DEFAULT FALSE;"))
+        await conn.execute(text("ALTER TABLE forms ADD COLUMN IF NOT EXISTS version INTEGER DEFAULT 1;"))
     # Seed default templates and mobile navigation if empty
     await seed_initial_data()
 
